@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Intellect - Premium Messenger</title>
+    
+    <!-- CSS Connections -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Meta tags for better mobile experience -->
+    <meta name="description" content="Intellect - Premium Messenger with Telegram-style features">
+    <meta name="theme-color" content="#1f1f1f">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>Intellect</h1>
+                    <p class="logo-tagline">Premium Messenger</p>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                        <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <div id="loginForm" class="tab-content active">
+                        <form onsubmit="handleLogin(event)">
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="Email" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Sign In</button>
+                        </form>
+                        <div class="form-footer">
+                            <a href="#" onclick="showNotification('Password reset coming soon!', 'info')">Forgot password?</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="registerForm" class="tab-content">
+                        <form onsubmit="handleRegister(event)">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="regUsername" placeholder="Username" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="regEmail" placeholder="Email" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="regPassword" placeholder="Password" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="regPhone" placeholder="Phone (optional)">
+                            </div>
+                            <button type="submit" class="btn-primary">Create Account</button>
+                        </form>
+                        <div class="form-footer">
+                            <span>By signing up, you agree to our Terms</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Demo Login Button (for quick access) -->
+                <button class="btn-demo" onclick="demoLogin()">
+                    <i class="fas fa-rocket"></i> Try Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Screen - Telegram Style -->
+        <div id="mainScreen" class="screen">
+            <!-- Left Sidebar - Chats List -->
+            <div class="sidebar" id="sidebar">
+                <!-- Header with Profile and Search -->
+                <div class="sidebar-header">
+                    <div class="header-top">
+                        <div class="user-profile" onclick="toggleProfileMenu()">
+                            <div class="avatar" id="currentUserAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-info-text">
+                                <span class="username" id="currentUsername">Loading...</span>
+                                <span class="user-status"><i class="fas fa-circle"></i> Online</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="icon-btn" onclick="togglePremiumModal()" title="Premium Features">
+                                <i class="fas fa-crown premium-icon"></i>
+                            </button>
+                            <button class="icon-btn mobile-menu-btn" onclick="toggleSidebar()">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search Chats" onkeyup="searchChats(this.value)" id="searchInput">
+                    </div>
+
+                    <!-- Chat Filters -->
+                    <div class="filter-tabs" id="filterTabs">
+                        <button class="filter-btn active" onclick="filterChats('all', this)">All <span class="filter-count">6</span></button>
+                        <button class="filter-btn" onclick="filterChats('fx-tae', this)">Fx TAE</button>
+                        <button class="filter-btn" onclick="filterChats('personal', this)">Personal</button>
+                        <button class="filter-btn" onclick="filterChats('unread', this)">Unread</button>
+                        <button class="filter-btn" onclick="filterChats('finance', this)">Finance</button>
+                    </div>
+                </div>
+
+                <!-- Birthday Banner -->
+                <div class="birthday-banner" onclick="showBirthday()">
+                    <div class="banner-content">
+                        <i class="fas fa-birthday-cake"></i>
+                        <div class="banner-text">
+                            <strong>Add your birthday!</strong>
+                            <span>Let your contacts know when you're celebrating</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <!-- Archived Chats -->
+                <div class="archived-section" onclick="openArchived()">
+                    <div class="archived-content">
+                        <i class="fas fa-archive"></i>
+                        <span>Archived Chats</span>
+                    </div>
+                    <div class="story-badge">1 Story</div>
+                </div>
+
+                <!-- Chats List Container -->
+                <div class="chats-list-container">
+                    <div class="chats-list" id="chatsList">
+                        <!-- Chats will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chat Area -->
+            <div class="chat-area">
+                <!-- Chat Header -->
+                <div class="chat-header" id="chatHeader">
+                    <div class="chat-info">
+                        <button class="back-btn mobile-only" onclick="toggleSidebar()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="chat-avatar" id="chatAvatar">
+                            <i class="fas fa-broadcast-tower"></i>
+                        </div>
+                        <div class="chat-details">
+                            <h3 id="currentChatName">Select a chat</h3>
+                            <span class="subscriber-count" id="subscriberCount"></span>
+                            <span class="typing-status" id="typingStatus"></span>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="icon-btn" onclick="searchInChat()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="icon-btn" onclick="togglePremiumFeatures()" id="premiumFeatureBtn">
+                            <i class="fas fa-star premium-star"></i>
+                        </button>
+                        <button class="icon-btn" onclick="showChatMenu()">
+                            <i class="fas fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Premium Features Panel -->
+                <div class="premium-panel hidden" id="premiumPanel">
+                    <div class="premium-header">
+                        <h4><i class="fas fa-crown"></i> Premium Features</h4>
+                        <button onclick="togglePremiumFeatures()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="premium-features-list">
+                        <div class="premium-feature-item" onclick="showPinnedMessages()">
+                            <i class="fas fa-thumbtack"></i>
+                            <span>Pinned Messages</span>
+                            <span class="feature-badge" id="pinnedCount">0/20</span>
+                        </div>
+                        <div class="premium-feature-item" onclick="scheduleMessage()">
+                            <i class="fas fa-clock"></i>
+                            <span>Schedule Messages</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        <div class="premium-feature-item" onclick="incognitoMode()">
+                            <i class="fas fa-user-secret"></i>
+                            <span>Incognito Mode</span>
+                            <i class="fas fa-toggle-off" id="incognitoToggle"></i>
+                        </div>
+                        <div class="premium-feature-item" onclick="customThemes()">
+                            <i class="fas fa-palette"></i>
+                            <span>Custom Themes</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        <div class="premium-feature-item" onclick="voiceTranscription()">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Transcription</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        <div class="premium-feature-item" onclick="exclusiveStickers()">
+                            <i class="fas fa-sticker"></i>
+                            <span>Exclusive Stickers</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input Area -->
+                <div class="message-input-container">
+                    <button class="attach-btn" onclick="showAttachmentMenu()">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <div class="input-wrapper">
+                        <input type="text" 
+                               id="messageInput" 
+                               placeholder="Message" 
+                               onkeyup="checkTyping()"
+                               onkeypress="handleMessageKeyPress(event)">
+                        <button class="emoji-btn" onclick="showEmojiPicker()">
+                            <i class="far fa-smile"></i>
+                        </button>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="mic-btn hidden" id="micButton" onclick="startVoiceRecording()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+
+                <!-- Attachment Menu -->
+                <div class="attachment-menu hidden" id="attachmentMenu">
+                    <button onclick="attachImage()">
+                        <i class="fas fa-image"></i>
+                        <span>Image</span>
+                    </button>
+                    <button onclick="attachFile()">
+                        <i class="fas fa-file"></i>
+                        <span>File</span>
+                    </button>
+                    <button onclick="attachLocation()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Location</span>
+                    </button>
+                    <button onclick="attachContact()">
+                        <i class="fas fa-address-book"></i>
+                        <span>Contact</span>
+                    </button>
+                    <button onclick="attachPoll()">
+                        <i class="fas fa-poll"></i>
+                        <span>Poll</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Subscription Modal -->
+        <div id="premiumModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-crown"></i> Upgrade to Premium</h2>
+                    <button onclick="togglePremiumModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="pricing-cards">
+                        <div class="pricing-card">
+                            <div class="card-header">
+                                <i class="fas fa-rocket"></i>
+                                <h3>Monthly</h3>
+                            </div>
+                            <div class="price">$4.99<span>/month</span></div>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> 20 Pinned Messages</li>
+                                <li><i class="fas fa-check"></i> Schedule Messages</li>
+                                <li><i class="fas fa-check"></i> Incognito Mode</li>
+                                <li><i class="fas fa-check"></i> Custom Themes</li>
+                                <li><i class="fas fa-check"></i> Voice Transcription</li>
+                                <li><i class="fas fa-check"></i> 2GB Cloud Storage</li>
+                            </ul>
+                            <button class="btn-premium" onclick="subscribe('monthly')">Subscribe Now</button>
+                        </div>
+                        <div class="pricing-card popular">
+                            <div class="popular-badge">Best Value</div>
+                            <div class="card-header">
+                                <i class="fas fa-crown"></i>
+                                <h3>Yearly</h3>
+                            </div>
+                            <div class="price">$49.99<span>/year</span></div>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> All Monthly Features</li>
+                                <li><i class="fas fa-check"></i> 100 Pinned Messages</li>
+                                <li><i class="fas fa-check"></i> Priority Support</li>
+                                <li><i class="fas fa-check"></i> Exclusive Stickers</li>
+                                <li><i class="fas fa-check"></i> 10GB Cloud Storage</li>
+                                <li><i class="fas fa-check"></i> Early Access Features</li>
+                            </ul>
+                            <button class="btn-premium" onclick="subscribe('yearly')">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p>✓ 7-day free trial • Cancel anytime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('chats', this)">
+                <i class="fas fa-comment"></i>
+                <span>Chats</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('contacts', this)">
+                <i class="fas fa-address-book"></i>
+                <span>Contacts</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('settings', this)">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile', this)">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Connection -->
+    <script src="script.js"></script>
+</body>
+</html>
